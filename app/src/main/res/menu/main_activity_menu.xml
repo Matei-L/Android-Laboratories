@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item
+            android:id="@+id/opt_spalat"
+            android:title="Nu te spala pe maini." />
+        <item
+            android:id="@+id/opt_transport"
+            android:title="Mergi cu transportul in comun." />
+        <item
+            android:id="@+id/opt_ochi"
+            android:title="Scarpana-te la ochi." />
+    </group>
+</menu>
