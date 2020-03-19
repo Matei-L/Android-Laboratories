@@ -1,18 +1,21 @@
 package com.fii.onlineshop;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.fii.onlineshop.models.Product;
+import com.fii.onlineshop.db.ProductsDatabase;
+import com.fii.onlineshop.db.dao.ProductDao;
+import com.fii.onlineshop.db.entities.ProductEntity;
 
 public class ProductInfoActivity extends BaseActivity {
 
-    TextView name;
-    TextView price;
-    TextView description;
-    Product product;
+    private TextView name;
+    private TextView price;
+    private TextView description;
+    private ProductEntity product;
+
+    private ProductsDatabase productsDatabase;
+    private ProductDao productDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,8 +24,20 @@ public class ProductInfoActivity extends BaseActivity {
         name = findViewById(R.id.product_name);
         price = findViewById(R.id.product_price);
         description = findViewById(R.id.product_description);
-        name.setText(getIntent().getExtras().get("name").toString());
-        price.setText(getIntent().getExtras().get("price").toString());
-        description.setText(getIntent().getExtras().get("desc").toString());
+
+        initDatabaseConnection();
+
+        int id = getIntent().getIntExtra("id", 0);
+        productDao.getProduct(id).observe(this, (product) -> {
+            name.setText(product.getName());
+            price.setText(product.getPriceInDollars());
+            description.setText(product.getDescription());
+        });
     }
+
+    private void initDatabaseConnection() {
+        productsDatabase = ProductsDatabase.getInstance(this);
+        productDao = productsDatabase.productDao();
+    }
+
 }

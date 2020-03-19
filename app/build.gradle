@@ -5,11 +5,16 @@ android {
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "com.fii.onlineshop"
-        minSdkVersion 19
+        minSdkVersion 24
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
     buildTypes {
         release {
@@ -25,7 +30,13 @@ android {
 
 dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    // Prefs
     implementation 'androidx.preference:preference:1.1.0'
+
+    // Room
+    implementation 'androidx.room:room-runtime:2.2.5'
+    annotationProcessor 'androidx.room:room-compiler:2.2.5'
+
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.0.2'

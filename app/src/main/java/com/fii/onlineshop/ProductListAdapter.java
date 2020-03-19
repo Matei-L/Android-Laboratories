@@ -8,16 +8,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.fii.onlineshop.models.Product;
+import com.fii.onlineshop.db.entities.ProductEntity;
 
 import java.util.List;
 
 public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.ViewHolder> {
 
-    private List<Product> items;
+    private List<ProductEntity> items;
     private OnClickListeners onClickListeners;
 
-    public ProductListAdapter(List<Product> items) {
+    public ProductListAdapter(List<ProductEntity> items) {
         this.items = items;
     }
 
@@ -56,9 +56,9 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
             setupOnItemClickListener(itemView, onClickListeners);
         }
 
-        void bindTo(Product product) {
+        void bindTo(ProductEntity product) {
             name.setText(product.getName());
-            price.setText(product.getPrice());
+            price.setText(product.getPriceInDollars());
         }
 
         void setupOnItemClickListener(@NonNull View itemView,

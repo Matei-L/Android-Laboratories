@@ -9,11 +9,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
 public abstract class BaseActivity extends AppCompatActivity {
-    private static final String DARK_MODE_KEY = "dark-mode";
-    private static boolean globalIsDarkMode = false;
-    private boolean isDarkMode = false;
-    private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
-    private SharedPreferences prefs;
+    protected static final String DARK_MODE_KEY = "dark-mode";
+    protected static boolean globalIsDarkMode = false;
+    protected boolean isDarkMode = false;
+    protected SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
+    protected SharedPreferences prefs;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

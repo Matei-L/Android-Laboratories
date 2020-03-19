@@ -2,12 +2,10 @@ package com.fii.onlineshop;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -17,7 +15,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.fii.onlineshop.models.Product;
+import com.fii.onlineshop.db.ProductsDatabase;
+import com.fii.onlineshop.db.dao.ProductDao;
+import com.fii.onlineshop.db.entities.ProductEntity;
 import com.fii.onlineshop.settings.SettingsActivity;
 
 import java.util.ArrayList;
@@ -29,8 +29,11 @@ public class MainActivity extends BaseActivity {
 
     private RecyclerView productListRecyclerView;
     private ProductListAdapter productListAdapter;
-    private List<Product> productList = new ArrayList<>();
+    private List<ProductEntity> productList = new ArrayList<>();
     private AlertDialog.Builder alertDialogBuilder;
+
+    private ProductsDatabase productsDatabase;
+    private ProductDao productDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,20 +41,23 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         productListRecyclerView = findViewById(R.id.product_list);
 
+        initDatabaseConnection();
+
         setupRecyclerView();
         getProductList();
     }
 
+    private void initDatabaseConnection() {
+        productsDatabase = ProductsDatabase.getInstance(this);
+        productDao = productsDatabase.productDao();
+    }
+
     private void getProductList() {
-        List<Product> products = new ArrayList<>();
-        products.add(new Product("Telefon", "Un telefon ff fain.", 300));
-        products.add(new Product("Calculator", "Un calculator ff fain.", 1500));
-        products.add(new Product("Mouse", "Un mouse ff fain.", 30));
-        products.add(new Product("Keyboard", "Un keyboard ff fain.", 100));
-        products.add(new Product("Iphone", "Un telefon ff fain.", 3000));
-        productList.clear();
-        productList.addAll(products);
-        productListAdapter.notifyDataSetChanged();
+        productDao.getProducts().observe(this, (products) -> {
+            productList.clear();
+            productList.addAll(products);
+            productListAdapter.notifyDataSetChanged();
+        });
     }
 
     private void setupRecyclerView() {
@@ -70,9 +76,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onItemClick(int position) {
                 Intent intent = new Intent(MainActivity.this, ProductInfoActivity.class);
-                intent.putExtra("name", productList.get(position).getName());
-                intent.putExtra("price", productList.get(position).getPrice());
-                intent.putExtra("desc", productList.get(position).getDescription());
+                intent.putExtra("id", productList.get(position).getId());
                 startActivity(intent);
                 onPause();
             }
@@ -135,8 +139,12 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        alertDialogBuilder = new AlertDialog.Builder(this)
-                .setTitle("Pericol de Covid-19.")
+        if (globalIsDarkMode) {
+            alertDialogBuilder = new AlertDialog.Builder(this, R.style.DialogThemeDark);
+        } else {
+            alertDialogBuilder = new AlertDialog.Builder(this, R.style.DialogThemeLight);
+        }
+        alertDialogBuilder.setTitle("Pericol de Covid-19.")
                 .setPositiveButton("Da!", (dialog, id) -> {
                     Toast.makeText(this, "Ai luat covid 19...", Toast.LENGTH_SHORT).show();
                 })
