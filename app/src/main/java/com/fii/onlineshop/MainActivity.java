@@ -18,11 +18,12 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.fii.onlineshop.models.Product;
+import com.fii.onlineshop.settings.SettingsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private static final String TAG = "MainActivity";
 
@@ -142,20 +143,24 @@ public class MainActivity extends AppCompatActivity {
                 .setNegativeButton("Nope!", (dialog, id) -> {
                     Toast.makeText(this, "Astepti sa se lanseze covid 20...", Toast.LENGTH_SHORT).show();
                 });
+        AlertDialog dialog;
         switch (item.getItemId()) {
             case R.id.opt_spalat:
                 alertDialogBuilder.setMessage("Nu te-ai spalat pe maini! Continui?");
+                dialog = alertDialogBuilder.create();
+                dialog.show();
                 break;
-            case R.id.opt_transport:
-                alertDialogBuilder.setMessage("Mergi co transportul in comun si cineva stranuta! Continui?");
+            case R.id.opt_settings:
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
                 break;
             case R.id.opt_ochi:
                 alertDialogBuilder.setMessage("Vrei sa te scarpini la ochi! Continui?");
+                dialog = alertDialogBuilder.create();
+                dialog.show();
                 break;
             default:
         }
-        AlertDialog dialog = alertDialogBuilder.create();
-        dialog.show();
         return true;
     }
 }

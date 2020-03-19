@@ -5,10 +5,10 @@
             android:id="@+id/opt_spalat"
             android:title="Nu te spala pe maini." />
         <item
-            android:id="@+id/opt_transport"
-            android:title="Mergi cu transportul in comun." />
-        <item
             android:id="@+id/opt_ochi"
             android:title="Scarpana-te la ochi." />
+        <item
+            android:id="@+id/opt_settings"
+            android:title="Settings." />
     </group>
 </menu>

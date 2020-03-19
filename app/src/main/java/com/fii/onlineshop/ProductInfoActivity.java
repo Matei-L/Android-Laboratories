@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.fii.onlineshop.models.Product;
 
-public class ProductInfoActivity extends AppCompatActivity {
+public class ProductInfoActivity extends BaseActivity {
 
     TextView name;
     TextView price;

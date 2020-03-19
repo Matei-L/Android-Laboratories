@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-</PreferenceScreen>
+    <SwitchPreferenceCompat
+        app:defaultValue="false"
+        app:key="dark-mode"
+        app:title="Enable dark-mode" />
+
+</androidx.preference.PreferenceScreen>
