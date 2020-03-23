@@ -1,11 +1,13 @@
-package com.fii.onlineshop;
+package com.fii.onlineshop.ui.prosduct_info;
 
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.fii.onlineshop.R;
 import com.fii.onlineshop.db.ProductsDatabase;
 import com.fii.onlineshop.db.dao.ProductDao;
 import com.fii.onlineshop.db.entities.ProductEntity;
+import com.fii.onlineshop.ui.BaseActivity;
 
 public class ProductInfoActivity extends BaseActivity {
 

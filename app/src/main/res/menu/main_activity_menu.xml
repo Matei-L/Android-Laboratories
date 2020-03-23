@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group>
         <item
-            android:id="@+id/opt_spalat"
-            android:title="Nu te spala pe maini." />
+            android:id="@+id/opt_sensors"
+            android:title="@string/sensors" />
         <item
             android:id="@+id/opt_ochi"
-            android:title="Scarpana-te la ochi." />
+            android:title="@string/scarpana_te_la_ochi" />
         <item
             android:id="@+id/opt_settings"
-            android:title="Settings." />
+            android:title="@string/settings" />
     </group>
 </menu>

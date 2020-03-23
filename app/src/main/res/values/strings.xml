@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">OnlineShop</string>
-    <string name="name">Name</string>
     <string name="price">Price</string>
     <string name="description">Description</string>
+    <string name="name">Name</string>
+    <string name="details">Details</string>
+    <string name="sensors">Sensors.</string>
+    <string name="settings">Settings.</string>
+    <string name="scarpana_te_la_ochi">Scarpana-te la ochi.</string>
 </resources>

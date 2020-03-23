@@ -21,6 +21,7 @@
     <style name="DialogThemeDark" parent="DialogThemeLight">
         <item name="android:background">@android:color/black</item>
         <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
     </style>
 
 </resources>

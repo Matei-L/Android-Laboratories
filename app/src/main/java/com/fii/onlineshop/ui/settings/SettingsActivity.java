@@ -1,10 +1,8 @@
-package com.fii.onlineshop.settings;
+package com.fii.onlineshop.ui.settings;
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.fii.onlineshop.BaseActivity;
+import com.fii.onlineshop.ui.BaseActivity;
 import com.fii.onlineshop.R;
 
 public class SettingsActivity extends BaseActivity {

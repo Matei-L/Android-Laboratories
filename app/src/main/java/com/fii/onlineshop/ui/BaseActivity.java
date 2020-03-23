@@ -1,4 +1,4 @@
-package com.fii.onlineshop;
+package com.fii.onlineshop.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,6 +7,8 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
+
+import com.fii.onlineshop.R;
 
 public abstract class BaseActivity extends AppCompatActivity {
     protected static final String DARK_MODE_KEY = "dark-mode";

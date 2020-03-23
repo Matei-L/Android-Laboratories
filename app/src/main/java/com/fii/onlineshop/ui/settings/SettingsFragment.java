@@ -1,13 +1,8 @@
-package com.fii.onlineshop.settings;
+package com.fii.onlineshop.ui.settings;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceManager;
 
 import com.fii.onlineshop.R;
 

@@ -1,4 +1,4 @@
-package com.fii.onlineshop;
+package com.fii.onlineshop.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -15,10 +15,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.fii.onlineshop.R;
 import com.fii.onlineshop.db.ProductsDatabase;
 import com.fii.onlineshop.db.dao.ProductDao;
 import com.fii.onlineshop.db.entities.ProductEntity;
-import com.fii.onlineshop.settings.SettingsActivity;
+import com.fii.onlineshop.ui.sensors.SensorsActivity;
+import com.fii.onlineshop.ui.settings.SettingsActivity;
+import com.fii.onlineshop.ui.prosduct_info.ProductInfoActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -152,14 +155,14 @@ public class MainActivity extends BaseActivity {
                     Toast.makeText(this, "Astepti sa se lanseze covid 20...", Toast.LENGTH_SHORT).show();
                 });
         AlertDialog dialog;
+        Intent intent;
         switch (item.getItemId()) {
-            case R.id.opt_spalat:
-                alertDialogBuilder.setMessage("Nu te-ai spalat pe maini! Continui?");
-                dialog = alertDialogBuilder.create();
-                dialog.show();
+            case R.id.opt_sensors:
+                intent = new Intent(MainActivity.this, SensorsActivity.class);
+                startActivity(intent);
                 break;
             case R.id.opt_settings:
-                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);
                 break;
             case R.id.opt_ochi:
