@@ -19,6 +19,7 @@ import com.fii.onlineshop.R;
 import com.fii.onlineshop.db.ProductsDatabase;
 import com.fii.onlineshop.db.dao.ProductDao;
 import com.fii.onlineshop.db.entities.ProductEntity;
+import com.fii.onlineshop.ui.camera.CameraActivity;
 import com.fii.onlineshop.ui.sensors.SensorsActivity;
 import com.fii.onlineshop.ui.settings.SettingsActivity;
 import com.fii.onlineshop.ui.prosduct_info.ProductInfoActivity;
@@ -142,6 +143,29 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()) {
+            case R.id.opt_sensors:
+                intent = new Intent(MainActivity.this, SensorsActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.opt_settings:
+                intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.opt_camera:
+                intent = new Intent(MainActivity.this, CameraActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.opt_ochi:
+                launchCoronaAlert();
+                break;
+            default:
+        }
+        return true;
+    }
+
+    private void launchCoronaAlert() {
         if (globalIsDarkMode) {
             alertDialogBuilder = new AlertDialog.Builder(this, R.style.DialogThemeDark);
         } else {
@@ -155,23 +179,8 @@ public class MainActivity extends BaseActivity {
                     Toast.makeText(this, "Astepti sa se lanseze covid 20...", Toast.LENGTH_SHORT).show();
                 });
         AlertDialog dialog;
-        Intent intent;
-        switch (item.getItemId()) {
-            case R.id.opt_sensors:
-                intent = new Intent(MainActivity.this, SensorsActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.opt_settings:
-                intent = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.opt_ochi:
-                alertDialogBuilder.setMessage("Vrei sa te scarpini la ochi! Continui?");
-                dialog = alertDialogBuilder.create();
-                dialog.show();
-                break;
-            default:
-        }
-        return true;
+        alertDialogBuilder.setMessage("Vrei sa te scarpini la ochi! Continui?");
+        dialog = alertDialogBuilder.create();
+        dialog.show();
     }
 }

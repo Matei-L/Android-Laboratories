@@ -20,3 +20,9 @@ I used the [Sensor Manager](https://developer.android.com/guide/topics/ui/settin
 Inside the helpers.permissions package there are some classes from my Bachelor's degree project used to keep the permission checks separated from the activity's logic. This package was used in SensorActivity in order to get all the permissions necessary for getting the last known gps location. After the permissions check, I made a listener on the last known location using [FusedLocationProviderClient](https://developer.android.com/training/location/retrieve-current).
 #### Commits of this homework:
 * finished lab 6
+
+## Lab 6
+### P1:
+I followed the steps described [here](https://developer.android.com/training/camera/photobasics#TaskPhotoView). For permission checking I used as in lab 6 the helpers.permissions package from my Bachelor's degree project. The steps were: checking for write external storage, preparing a temporary file for saving the image, launching camera app using an intent, getting the bitmap from the path of the now saved photo and displaying it inside an ImageView. 
+#### Commits of this homework:
+* finished lab 7
