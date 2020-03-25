@@ -21,3 +21,4 @@ Inside the helpers.permissions package there are some classes from my Bachelor's
 #### Commits of this homework:
 * finished lab 6
 * fixed gradle error
+* listening for SensorEvents
