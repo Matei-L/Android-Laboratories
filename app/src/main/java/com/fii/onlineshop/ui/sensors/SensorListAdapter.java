@@ -1,6 +1,7 @@
 package com.fii.onlineshop.ui.sensors;
 
 import android.hardware.Sensor;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +13,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.fii.onlineshop.R;
 import com.fii.onlineshop.db.entities.ProductEntity;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class SensorListAdapter extends RecyclerView.Adapter<SensorListAdapter.ViewHolder> {
 
-    private List<Sensor> items;
+    private List<Pair<Sensor, List<Float>>> items;
     private OnClickListeners onClickListeners;
 
-    public SensorListAdapter(List<Sensor> items) {
+    public SensorListAdapter(List<Pair<Sensor, List<Float>>> items) {
         this.items = items;
     }
 
@@ -58,9 +60,9 @@ public class SensorListAdapter extends RecyclerView.Adapter<SensorListAdapter.Vi
             setupOnItemClickListener(itemView, onClickListeners);
         }
 
-        void bindTo(Sensor sensor) {
-            name.setText(sensor.getName());
-            details.setText(sensor.getStringType());
+        void bindTo(Pair<Sensor, List<Float>> sensor) {
+            name.setText(sensor.first.getName());
+            details.setText(Arrays.toString(sensor.second.toArray()));
         }
 
         void setupOnItemClickListener(@NonNull View itemView,
