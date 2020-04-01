@@ -25,8 +25,9 @@ Inside the helpers.permissions package there are some classes from my Bachelor's
 
 ## Lab 7
 ### P1:
-I followed the steps described [here](https://developer.android.com/training/camera/photobasics#TaskPhotoView). For permission checking I used as in lab 6 the helpers.permissions package from my Bachelor's degree project. The steps were: checking for write external storage, preparing a temporary file for saving the image, launching camera app using an intent, getting the bitmap from the path of the now saved photo and displaying it inside an ImageView.
+I followed the steps described [here](https://developer.android.com/training/camerax/take-photo). For permission checking I used as in lab 6 the helpers.permissions package from my Bachelor's degree project. 
 #### Commits of this homework:
 * finished lab 7
 * Merge branch 'master' into lab-7
 * modified README
+* used camerax

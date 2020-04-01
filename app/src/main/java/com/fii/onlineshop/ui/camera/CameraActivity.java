@@ -1,101 +1,104 @@
 package com.fii.onlineshop.ui.camera;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.FileProvider;
+import androidx.camera.camera2.Camera2Config;
+import androidx.camera.core.CameraSelector;
+import androidx.camera.core.CameraXConfig;
+import androidx.camera.core.ImageCapture;
+import androidx.camera.core.ImageCaptureException;
+import androidx.camera.core.Preview;
+import androidx.camera.view.PreviewView;
+import androidx.core.content.ContextCompat;
 
 import com.fii.onlineshop.R;
+import com.fii.onlineshop.helpers.permissions.CameraPermissionHelper;
 import com.fii.onlineshop.helpers.permissions.PermissionCallback;
 import com.fii.onlineshop.helpers.permissions.StoragePermissionHelper;
 import com.fii.onlineshop.ui.BaseActivity;
 import com.fii.onlineshop.ui.MainActivity;
+
+import androidx.camera.lifecycle.ProcessCameraProvider;
+
+import com.google.common.util.concurrent.ListenableFuture;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class CameraActivity extends BaseActivity {
+public class CameraActivity extends BaseActivity implements CameraXConfig.Provider {
     private static final String TAG = "CameraActivity";
-    private static final int REQUEST_TAKE_PHOTO = 1;
     private String currentPhotoPath;
     private StoragePermissionHelper storagePermissionHelper;
+    private CameraPermissionHelper cameraPermissionHelper;
 
-    private ImageView imageView;
-    private TextView imagePathTextView;
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
+    private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
+    private PreviewView previewView;
+    private ProcessCameraProvider cameraProvider;
+    private ImageCapture imageCapture;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-        imageView = findViewById(R.id.imageView);
-        imagePathTextView = findViewById(R.id.imagePath);
+        previewView = findViewById(R.id.preview_view);
 
         setupPermissionHelpers();
         storagePermissionHelper.request();
     }
 
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                Log.e(TAG, "dispatchTakePictureIntent: Error while opening a file for a new photo.");
-            }
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.fii.onlineshop.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            }
-        }
+    void bindPreviewAndImageProvider(@NonNull ProcessCameraProvider cameraProvider) {
+        // bind preview
+        Preview preview = new Preview.Builder()
+                .build();
+
+        preview.setSurfaceProvider(previewView.getPreviewSurfaceProvider());
+
+        CameraSelector cameraSelector = new CameraSelector.Builder()
+                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                .build();
+
+        cameraProvider.bindToLifecycle(this, cameraSelector, preview);
+
+        // bind image capture
+        imageCapture =
+                new ImageCapture.Builder()
+                        .setTargetRotation(previewView.getDisplay().getRotation())
+                        .build();
+
+        cameraProvider.bindToLifecycle(this, cameraSelector, imageCapture);
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            Toast.makeText(this, currentPhotoPath + " saved", Toast.LENGTH_SHORT).show();
-            showImage(currentPhotoPath);
-        }
     }
 
-    private void showImage(String path) {
-        File imgFile = new File(path);
-        if (imgFile.exists()) {
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            imagePathTextView.setText(currentPhotoPath);
-            imageView.setImageBitmap(myBitmap);
-        }
-    }
+    private void startCamera() {
+        cameraProviderFuture = ProcessCameraProvider.getInstance(this);
+        cameraProviderFuture.addListener(() -> {
+            try {
+                cameraProvider = cameraProviderFuture.get();
+                bindPreviewAndImageProvider(cameraProvider);
 
-    private File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", new Locale("RO")).format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_Onlineshop";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,
-                ".jpg",
-                storageDir
-        );
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
+            } catch (ExecutionException | InterruptedException e) {
+                // No errors need to be handled for this Future.
+                // This should never be reached.
+            }
+        }, ContextCompat.getMainExecutor(this));
     }
 
     private void setupPermissionHelpers() {
@@ -103,7 +106,24 @@ public class CameraActivity extends BaseActivity {
 
             @Override
             public void onPermissionGranted() {
-                dispatchTakePictureIntent();
+                cameraPermissionHelper.request();
+            }
+
+            @Override
+            public void onPermissionDenied() {
+                openMainActivity();
+            }
+        });
+        cameraPermissionHelper = new CameraPermissionHelper(this, new PermissionCallback() {
+
+            @Override
+            public void onPermissionGranted() {
+                previewView.post(() -> {
+                    startCamera();
+                    previewView.setOnClickListener(v -> {
+                        takePhoto();
+                    });
+                });
             }
 
             @Override
@@ -122,5 +142,46 @@ public class CameraActivity extends BaseActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         storagePermissionHelper.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        cameraPermissionHelper.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+
+    public void takePhoto() {
+        File image = null;
+        try {
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", new Locale("RO"))
+                    .format(new Date());
+            String imageFileName = "JPEG_" + timeStamp + "_Onlineshop";
+            File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            image = File.createTempFile(
+                    imageFileName,
+                    ".jpg",
+                    storageDir
+            );
+        } catch (IOException e) {
+            Log.d(TAG, "onClick: ioException on creating the file: " + e.getMessage());
+        }
+        if (image != null) {
+            ImageCapture.OutputFileOptions outputFileOptions =
+                    new ImageCapture.OutputFileOptions.Builder(image).build();
+            File finalImage = image;
+            imageCapture.takePicture(outputFileOptions, executor, new ImageCapture.OnImageSavedCallback() {
+                @Override
+                public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
+                    Log.d(TAG, "Image saved at path: " + finalImage.getAbsolutePath());
+                }
+
+                @Override
+                public void onError(@NonNull ImageCaptureException exception) {
+                    Log.e(TAG, "onError: Error while saving the image: ", exception);
+                }
+            });
+        }
+    }
+
+    @NonNull
+    @Override
+    public CameraXConfig getCameraXConfig() {
+        return Camera2Config.defaultConfig();
     }
 }
